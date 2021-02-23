@@ -3,6 +3,8 @@
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 var pageContentEl = document.querySelector("#page-content");
+var tasksInProgressEl = document.querySelector("#tasks-in-progress");
+var tasksCompletedEl = document.querySelector("#tasks-completed")
 
 // Assign a new variable for each individual task
 var taskIdCounter = 0;
@@ -161,7 +163,32 @@ var completeEditTask = function (taskName, taskType, taskId) {
 	alert("Your Task Was Updated!");
 };
 
-// Form event handler
+var taskStatusChangeHandler = function(event) {
+	// Get the id of the task that is being modified
+	var taskId = event.target.getAttribute("data-task-id");
+
+	// Get the currently selected option's value and convert to lowercase
+	var statusValue = event.target.value.toLowerCase();
+
+	// Find the parent task item element based on the id
+	var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+	// Move the tasks between columns
+	if (statusValue === "to do"){
+		tasksToDoEl.appendChild(taskSelected);
+	}
+	else if (statusValue === "in progress") {
+		tasksInProgressEl.appendChild(taskSelected);
+	}
+	else if (statusValue === "completed") {
+		tasksCompletedEl.appendChild(taskSelected);
+	}
+};
+
+// Submitting the form on the first try or an edit
 formEl.addEventListener("submit", taskFormHandler);
 
+// Clicking on an edit or on a delete button
 pageContentEl.addEventListener("click", taskButtonHandler);
+
+pageContentEl.addEventListener("change", taskStatusChangeHandler);
